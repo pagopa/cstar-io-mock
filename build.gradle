@@ -1,0 +1,68 @@
+import java.util.function.Predicate
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'org.graalvm.buildtools.native' version '0.9.20'
+	id 'jacoco'
+}
+
+group = 'it.pagopa.cstar'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.enabled true
+		xml.destination file("${buildDir}/reports/jacoco.xml")
+	}
+}
+
+test {
+    useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+graalvmNative {
+
+	agent {
+		defaultMode = "standard"
+		enabled = true
+		metadataCopy {
+			inputTaskNames.add("bootRun")
+			outputDirectories.add("src/main/resources/META-INF/native-image")
+			mergeWithExisting = true
+		}
+		tasksToInstrumentPredicate = { t -> (t.name == "bootRun") } as Predicate<Task>
+    }
+
+    binaries {
+        main {
+            useFatJar = true
+            javaLauncher = javaToolchains.launcherFor {
+                languageVersion = JavaLanguageVersion.of(17)
+                vendor = JvmVendorSpec.matching("GraalVM Community")
+            }
+			buildArgs.add('-H:IncludeResources=.*application.yaml$')
+        }
+    }
+
+    metadataRepository {
+        enabled = true
+    }
+}
