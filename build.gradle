@@ -1,10 +1,8 @@
-import java.util.function.Predicate
-
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.1.0'
+	id 'org.springframework.boot' version '3.1.1'
 	id 'io.spring.dependency-management' version '1.1.0'
-	id 'org.graalvm.buildtools.native' version '0.9.20'
+	id 'org.graalvm.buildtools.native' version '0.9.23'
 	id 'jacoco'
 }
 
@@ -39,30 +37,17 @@ test {
 }
 
 graalvmNative {
-
-	agent {
-		defaultMode = "standard"
-		enabled = true
-		metadataCopy {
-			inputTaskNames.add("bootRun")
-			outputDirectories.add("src/main/resources/META-INF/native-image")
-			mergeWithExisting = true
-		}
-		tasksToInstrumentPredicate = { t -> (t.name == "bootRun") } as Predicate<Task>
-    }
-
-    binaries {
-        main {
-            useFatJar = true
-            javaLauncher = javaToolchains.launcherFor {
-                languageVersion = JavaLanguageVersion.of(17)
-                vendor = JvmVendorSpec.matching("GraalVM Community")
-            }
-			buildArgs.add('-H:IncludeResources=.*application.yaml$')
-        }
-    }
-
     metadataRepository {
         enabled = true
+        version = "0.3.2"
+    }
+	binaries {
+        useArgFile.set(false)
+		
+        main {
+            useFatJar = true
+            buildArgs.add("--initialize-at-run-time=io.netty")
+			buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback")
+        }
     }
 }
