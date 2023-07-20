@@ -13,6 +13,6 @@ EXPOSE 8080
 RUN useradd --uid 10000 runner
 USER 10000
 
-COPY --from=builder /app/build/native/nativeCompile/cstar-io-mock .
+COPY --from=builder /app/build/native/nativeCompile/io-mock .
 
 ENTRYPOINT ["./cstar-io-mock"]
