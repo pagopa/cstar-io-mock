@@ -1,0 +1,10 @@
+apiVersion: v2
+name: cstar-io-mock
+description: Micro-service to mock io backend
+type: application
+version: 1.0.0
+appVersion: 1.0.0
+dependencies:
+  - name: microservice-chart
+    version: 2.8.0
+    repository: "https://pagopa.github.io/aks-microservice-chart-blueprint"
