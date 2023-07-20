@@ -15,4 +15,4 @@ USER 10000
 
 COPY --from=builder /app/build/native/nativeCompile/io-mock .
 
-ENTRYPOINT ["./cstar-io-mock"]
+ENTRYPOINT ["./io-mock"]
