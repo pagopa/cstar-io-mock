@@ -65,6 +65,8 @@ stages:
     dependsOn: 'project_version'
     variables:
       projectVersion: $[ stageDependencies.project_version.ProjectVersion.outputs['getprojectversion.outputProjectVersion'] ]
+      devDockerRegistryServiceConnection: '$(DEV_CONTAINER_REGISTRY_SERVICE_CONN)'
+      uatDockerRegistryServiceConnection: '$(UAT_CONTAINER_REGISTRY_SERVICE_CONN)'
     jobs:
       - job: Build
         displayName: "Build and publish to DEV"
@@ -72,10 +74,10 @@ stages:
           matrix:
             dev:
               environment: 'DEV'
-              dockerRegistryServiceConnection: '$(DEV_CONTAINER_REGISTRY_SERVICE_CONN)'
+              dockerRegistryServiceConnection: '$(devDockerRegistryServiceConnection)'
             uat:
               environment: 'UAT'
-              dockerRegistryServiceConnection: '$(UAT_CONTAINER_REGISTRY_SERVICE_CONN)'
+              dockerRegistryServiceConnection: '$(uatDockerRegistryServiceConnection)'
           maxParallel: 2
         pool:
           vmImage: $(vmImageNameDefault)
@@ -84,7 +86,7 @@ stages:
             condition: and(succeeded(), ${{ parameters.executeBuild }})
             displayName: 'Publish image to $(environment)'
             inputs:
-              containerRegistry: $(dockerRegistryServiceConnection)
+              containerRegistry: ''
               repository: '$(K8S_IMAGE_REPOSITORY_NAME)'
               command: 'buildAndPush'
               Dockerfile: 'Dockerfile'
