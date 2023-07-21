@@ -86,7 +86,7 @@ stages:
             condition: and(succeeded(), ${{ parameters.executeBuild }})
             displayName: 'Publish image to $(environment)'
             inputs:
-              containerRegistry: ''
+              containerRegistry: '$(dockerRegistryServiceConnection)'
               repository: '$(K8S_IMAGE_REPOSITORY_NAME)'
               command: 'buildAndPush'
               Dockerfile: 'Dockerfile'
