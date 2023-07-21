@@ -2,6 +2,9 @@ logging:
   level:
     root: INFO
 
+iobackend:
+  jwtkey: ${BASE64_IO_JWT_KEY:testKey}
+
 management:
   endpoint:
     health:
