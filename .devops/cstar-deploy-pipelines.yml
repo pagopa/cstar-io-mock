@@ -123,7 +123,7 @@ stages:
         displayName: 'Deploy to DEV K8S'
         pool:
           name: $(DEV_AGENT_POOL)
-        environment: 'dev'
+        environment: DEV
         strategy:
           runOnce:
             deploy:
@@ -179,7 +179,7 @@ stages:
         displayName: 'Deploy to UAT K8S'
         pool:
           name: $(UAT_AGENT_POOL)
-        environment: 'uat'
+        environment: UAT
         strategy:
           runOnce:
             deploy:
