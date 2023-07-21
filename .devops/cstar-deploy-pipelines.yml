@@ -69,7 +69,6 @@ stages:
       - job: Build
         displayName: "Build and publish to DEV"
         strategy:
-          maxParallel: 2
           matrix:
             dev:
               environment: 'DEV'
@@ -77,6 +76,7 @@ stages:
             uat:
               environment: 'UAT'
               dockerRegistryServiceConnection: '$(UAT_CONTAINER_REGISTRY_SERVICE_CONN)'
+          maxParallel: 2
         pool:
           vmImage: $(vmImageNameDefault)
         steps:
