@@ -1,0 +1,52 @@
+# File: deployment_steps_template.yml
+
+parameters:
+  - name: env
+    type: string
+  - name: kubernetesServiceConnection
+    type: string
+  - name: deployNamespace
+    type: string
+  - name: helmReleaseName
+    type: string
+
+steps:
+  - download: none
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      buildType: 'current'
+      artifactName: 'helm'
+      targetPath: '$(Pipeline.Workspace)/helm/rtd'
+  - task: Bash@3
+    name: helm_dependency_build
+    displayName: Helm dependency build
+    inputs:
+      workingDirectory: '$(Pipeline.Workspace)/helm/rtd'
+      targetType: 'inline'
+      script: |
+        helm repo add pagopa-microservice https://pagopa.github.io/aks-microservice-chart-blueprint
+        helm dep build
+      failOnStderr: true
+  - task: Bash@3
+    name: helm_template
+    displayName: Helm template
+    inputs:
+      workingDirectory: '$(Pipeline.Workspace)/helm/rtd'
+      targetType: 'inline'
+      script: |
+        helm template . -f values-${{ parameters.env }}.yaml
+      failOnStderr: true
+  - task: HelmDeploy@0
+    displayName: Helm upgrade
+    inputs:
+      kubernetesServiceEndpoint: '$(kubernetesServiceConnection)'
+      namespace: '$(deployNamespace)'
+      command: upgrade
+      chartType: filepath
+      chartPath: $(Pipeline.Workspace)/helm/rtd
+      chartName: ${{ parameters.helmReleaseName }}
+      releaseName: ${{ parameters.helmReleaseName }}
+      valueFile: "$(Pipeline.Workspace)/helm/rtd/values-${{ parameters.env }}.yaml"
+      install: true
+      waitForExecution: true
+      arguments: "--timeout 5m00s --debug"
