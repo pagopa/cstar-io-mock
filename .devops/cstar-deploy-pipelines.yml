@@ -86,9 +86,7 @@ stages:
             parameters:
               environment: $(environment)
               dockerRegistryServiceConnection: $(dockerRegistryServiceConnection)
-              vmImageName: $(vmImageNameDefault)
               k8sImageRepository: $(K8S_IMAGE_REPOSITORY_NAME)
-              executeBuild: ${{ parameters.executeBuild }}
 
   - stage: 'publish_artifact_helm'
     displayName: 'Publish artifact Helm'
