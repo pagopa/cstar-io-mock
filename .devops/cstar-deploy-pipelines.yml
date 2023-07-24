@@ -33,9 +33,6 @@ variables:
   helmReleaseName : '$(HELM_RELEASE_NAME)'
   canDeploy: true
 
-  devDockerRegistryServiceConnection: '$(DEV_CONTAINER_REGISTRY_SERVICE_CONN)'
-  uatDockerRegistryServiceConnection: '$(UAT_CONTAINER_REGISTRY_SERVICE_CONN)'
-
 stages:
   - stage: 'project_version'
     displayName: Get app version
@@ -71,6 +68,9 @@ stages:
     jobs:
       - job: Build
         displayName: "Build and publish to DEV"
+        variables:
+          devDockerRegistryServiceConnection: '$(DEV_CONTAINER_REGISTRY_SERVICE_CONN)'
+          uatDockerRegistryServiceConnection: '$(UAT_CONTAINER_REGISTRY_SERVICE_CONN)'
         strategy:
           matrix:
             dev:
@@ -87,7 +87,7 @@ stages:
             condition: and(succeeded(), ${{ parameters.executeBuild }})
             displayName: 'Publish image to $(environment)'
             inputs:
-              containerRegistry: '$(dockerRegistryServiceConnection)'
+              containerRegistry: $(dockerRegistryServiceConnection)
               repository: '$(K8S_IMAGE_REPOSITORY_NAME)'
               command: 'buildAndPush'
               Dockerfile: 'Dockerfile'
