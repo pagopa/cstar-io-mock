@@ -34,7 +34,7 @@ microservice-chart:
 
   ingress:
     create: true
-    path: /mock-io/(.*)
+    path: /cstarmockbackendio/(.*)
     servicePort: 8080
 
   serviceAccount:
