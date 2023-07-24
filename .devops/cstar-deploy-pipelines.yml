@@ -33,6 +33,9 @@ variables:
   helmReleaseName : '$(HELM_RELEASE_NAME)'
   canDeploy: true
 
+  devDockerRegistryServiceConnection: '$(DEV_CONTAINER_REGISTRY_SERVICE_CONN)'
+  uatDockerRegistryServiceConnection: '$(UAT_CONTAINER_REGISTRY_SERVICE_CONN)'
+
 stages:
   - stage: 'project_version'
     displayName: Get app version
@@ -65,8 +68,6 @@ stages:
     dependsOn: 'project_version'
     variables:
       projectVersion: $[ stageDependencies.project_version.ProjectVersion.outputs['getprojectversion.outputProjectVersion'] ]
-      devDockerRegistryServiceConnection: '$(DEV_CONTAINER_REGISTRY_SERVICE_CONN)'
-      uatDockerRegistryServiceConnection: '$(UAT_CONTAINER_REGISTRY_SERVICE_CONN)'
     jobs:
       - job: Build
         displayName: "Build and publish to DEV"
@@ -82,12 +83,18 @@ stages:
         pool:
           vmImage: $(vmImageNameDefault)
         steps:
-          - template: ./build-template.yml
-            parameters:
-              environment: $(environment)
-              dockerRegistryServiceConnection: $(dockerRegistryServiceConnection)
-              k8sImageRepository: $(K8S_IMAGE_REPOSITORY_NAME)
-              executeBuild: ${{ parameters.executeBuild }}
+          - task: Docker@2
+            condition: and(succeeded(), ${{ parameters.executeBuild }})
+            displayName: 'Publish image to $(environment)'
+            inputs:
+              containerRegistry: '$(dockerRegistryServiceConnection)'
+              repository: '$(K8S_IMAGE_REPOSITORY_NAME)'
+              command: 'buildAndPush'
+              Dockerfile: 'Dockerfile'
+              tags: |
+                $(Build.BuildId)
+                latest
+                $(projectVersion)
 
   - stage: 'publish_artifact_helm'
     displayName: 'Publish artifact Helm'
