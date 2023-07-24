@@ -137,12 +137,45 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: ./deploy-template.yml
-                  parameters:
-                    env: 'dev'
-                    kubernetesServiceConnection: $(DEV_KUBERNETES_SERVICE_CONN)
-                    deployNamespace: $(deployNamespace)
-                    helmReleaseName: $(helmReleaseName)
+                - download: none
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'helm'
+                    targetPath: '$(Pipeline.Workspace)/helm/rtd'
+                - task: Bash@3
+                  name: helm_dependency_build
+                  displayName: Helm dependency build
+                  inputs:
+                    workingDirectory: '$(Pipeline.Workspace)/helm/rtd'
+                    targetType: 'inline'
+                    script: |
+                      helm repo add pagopa-microservice https://pagopa.github.io/aks-microservice-chart-blueprint
+                      helm dep build
+                    failOnStderr: true
+                - task: Bash@3
+                  name: helm_template
+                  displayName: Helm template
+                  inputs:
+                    workingDirectory: '$(Pipeline.Workspace)/helm/rtd'
+                    targetType: 'inline'
+                    script: |
+                      helm template . -f values-dev.yaml
+                    failOnStderr: true
+                - task: HelmDeploy@0
+                  displayName: Helm upgrade
+                  inputs:
+                    kubernetesServiceEndpoint: '$(DEV_KUBERNETES_SERVICE_CONN)'
+                    namespace: '$(deployNamespace)'
+                    command: upgrade
+                    chartType: filepath
+                    chartPath: $(Pipeline.Workspace)/helm/rtd
+                    chartName: ${{ variables.helmReleaseName }}
+                    releaseName: ${{ variables.helmReleaseName }}
+                    valueFile: "$(Pipeline.Workspace)/helm/rtd/values-dev.yaml"
+                    install: true
+                    waitForExecution: true
+                    arguments: "--timeout 5m00s --debug"
 
   - stage: 'deploy_uat'
     displayName: 'Deploy to UAT K8S'
@@ -161,9 +194,42 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: ./deploy-template.yml
-                  parameters:
-                    env: 'uat'
-                    kubernetesServiceConnection: $(UAT_KUBERNETES_SERVICE_CONN)
-                    deployNamespace: $(deployNamespace)
-                    helmReleaseName: $(helmReleaseName)
+                - download: none
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'helm'
+                    targetPath: '$(Pipeline.Workspace)/helm/rtd'
+                - task: Bash@3
+                  name: helm_dependency_build
+                  displayName: Helm dependency build
+                  inputs:
+                    workingDirectory: '$(Pipeline.Workspace)/helm/rtd'
+                    targetType: 'inline'
+                    script: |
+                      helm repo add pagopa-microservice https://pagopa.github.io/aks-microservice-chart-blueprint
+                      helm dep build
+                    failOnStderr: true
+                - task: Bash@3
+                  name: helm_template
+                  displayName: Helm template
+                  inputs:
+                    workingDirectory: '$(Pipeline.Workspace)/helm/rtd'
+                    targetType: 'inline'
+                    script: |
+                      helm template . -f values-uat.yaml
+                    failOnStderr: true
+                - task: HelmDeploy@0
+                  displayName: Helm upgrade
+                  inputs:
+                    kubernetesServiceEndpoint: '$(UAT_KUBERNETES_SERVICE_CONN)'
+                    namespace: '$(deployNamespace)'
+                    command: upgrade
+                    chartType: filepath
+                    chartPath: $(Pipeline.Workspace)/helm/rtd
+                    chartName: ${{ variables.helmReleaseName }}
+                    releaseName: ${{ variables.helmReleaseName }}
+                    valueFile: "$(Pipeline.Workspace)/helm/rtd/values-uat.yaml"
+                    install: true
+                    waitForExecution: true
+                    arguments: "--timeout 5m00s --debug"
