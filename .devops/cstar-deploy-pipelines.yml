@@ -82,10 +82,10 @@ stages:
         pool:
           vmImage: $(vmImageNameDefault)
         steps:
-          - template: build-template.yml
+          - template: ./build-template.yml
             parameters:
-              environment: ${{ matrix.environment }}
-              dockerRegistryServiceConnection: ${{ matrix.dockerRegistryServiceConnection }}
+              environment: $(environment)
+              dockerRegistryServiceConnection: $(dockerRegistryServiceConnection)
               vmImageName: $(vmImageNameDefault)
               K8S_IMAGE_REPOSITORY_NAME: $(K8S_IMAGE_REPOSITORY_NAME)
               executeBuild: ${{ parameters.executeBuild }}
