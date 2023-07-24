@@ -164,6 +164,6 @@ stages:
                 - template: ./deploy-template.yml
                   parameters:
                     env: 'uat'
-                    kubernetesServiceConnection: $(DEV_KUBERNETES_SERVICE_CONN)
+                    kubernetesServiceConnection: $(UAT_KUBERNETES_SERVICE_CONN)
                     deployNamespace: $(deployNamespace)
                     helmReleaseName: $(helmReleaseName)
