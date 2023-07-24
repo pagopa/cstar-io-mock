@@ -1,0 +1,6 @@
+logging:
+  level:
+    root: INFO
+
+iobackend:
+  jwtkey: Cup7DtbwoctKZqDJun/kkVLs4TSdHCRzVzA5L5PrXQg=
