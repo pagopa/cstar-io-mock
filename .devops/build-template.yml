@@ -5,6 +5,8 @@ parameters:
     type: string
   - name: k8sImageRepository
     type: string
+  - name: executeBuild
+    type: boolean
 
 steps:
   - task: Docker@2
