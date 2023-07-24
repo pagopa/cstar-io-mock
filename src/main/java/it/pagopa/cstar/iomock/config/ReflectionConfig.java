@@ -1,4 +1,4 @@
-package it.pagopa.cstar.iomock;
+package it.pagopa.cstar.iomock.config;
 
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
