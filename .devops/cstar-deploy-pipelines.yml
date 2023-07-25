@@ -7,7 +7,7 @@ parameters:
     type: boolean
     default: true
   - name: 'includeUat'
-    display: 'Include build and deploy to UAT'
+    displayName: 'Include build and deploy to UAT'
     type: boolean
     default: true
 
