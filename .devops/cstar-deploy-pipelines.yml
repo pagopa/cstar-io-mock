@@ -6,6 +6,10 @@ parameters:
     displayName: 'Launch gradle and docker build'
     type: boolean
     default: true
+  - name: 'includeUat'
+    display: 'Include build and deploy to UAT'
+    type: boolean
+    default: true
 
 trigger:
   branches:
@@ -31,14 +35,12 @@ variables:
 
   deployNamespace: '$(DEPLOY_NAMESPACE)'
   helmReleaseName : '$(HELM_RELEASE_NAME)'
-  canDeploy: true
   devContainerRegistry: '$(DEV_CONTAINER_REGISTRY_SERVICE_CONN)'
   uatContainerRegistry: '$(UAT_CONTAINER_REGISTRY_SERVICE_CONN)'
 
 stages:
   - stage: 'project_version'
     displayName: Get app version
-    condition: eq(variables.canDeploy, true)
     jobs:
       - job: ProjectVersion
         displayName: Gradle project version
@@ -54,7 +56,7 @@ stages:
           - task: Bash@3
             displayName: Get Project version
             name: getprojectversion
-            condition: and(succeeded(), eq(variables.canDeploy, true))
+            condition: succeeded()
             inputs:
               targetType: 'inline'
               script: |
@@ -87,6 +89,7 @@ stages:
                 $(projectVersion)
       - job: Build_Uat
         displayName: "Build and publish to UAT"
+        condition: and(succeeded(), ${{ parameters.includeUat }})
         pool:
           vmImage: $(vmImageNameDefault)
         steps:
@@ -123,7 +126,7 @@ stages:
   - stage: 'deploy_dev'
     displayName: 'Deploy to DEV K8S'
     dependsOn: [ 'publish_artifact_helm' ]
-    condition: and(succeeded(), eq(variables.canDeploy, true))
+    condition: succeeded()
     variables:
       projectVersion: $[ stageDependencies.project_version.ProjectVersion.outputs['getprojectversion.outputProjectVersion'] ]
     jobs:
@@ -180,7 +183,7 @@ stages:
   - stage: 'deploy_uat'
     displayName: 'Deploy to UAT K8S'
     dependsOn: ['publish_artifact_helm']
-    condition: and(succeeded(), eq(variables.canDeploy, true))
+    condition: and(succeeded(), eq(variables.includeUat, true))
     variables:
       projectVersion: $[ stageDependencies.project_version.ProjectVersion.outputs['getprojectversion.outputProjectVersion'] ]
     jobs:
