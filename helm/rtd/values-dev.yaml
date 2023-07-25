@@ -29,7 +29,15 @@ microservice-chart:
         metadata:
           type: Utilization # Allowed types are 'Utilization' or 'AverageValue'
           value: "60"
-
+    advanced:
+      horizontalPodAutoscalerConfig:
+        behavior:
+          scaleDown:
+            stabilizationWindowSeconds: 20
+            policies:
+              - type: Pods
+                value: 1
+                periodSeconds: 5
 #  autoscaling:
 #    enable: false
 #    minReplica: 1
