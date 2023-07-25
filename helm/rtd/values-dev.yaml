@@ -22,13 +22,13 @@ microservice-chart:
     enable: true
     minReplica: 1
     maxReplica: 3
-    pollingInterval: 20 # seconds
+    pollingInterval: 10 # seconds
     cooldownPeriod: 300 # seconds
     triggers:
       - type: cpu
         metadata:
           type: Utilization # Allowed types are 'Utilization' or 'AverageValue'
-          value: "70"
+          value: "60"
 
 #  autoscaling:
 #    enable: false
