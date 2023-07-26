@@ -31,14 +31,13 @@ microservice-chart:
           value: "80"
     advanced:
       horizontalPodAutoscalerConfig:
-        behaviour:
+        behavior:
           scaleUp:
             stabilizationWindowSeconds: 0
             policies:
               - type: Pods
                 value: 1
-                periodSeconds: 15
-            selectPolicy: Max
+                periodSeconds: 2
 
   keyvault:
     name: "cstar-d-rtd-kv"
