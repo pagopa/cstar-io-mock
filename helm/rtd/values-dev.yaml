@@ -29,6 +29,16 @@ microservice-chart:
         metadata:
           type: Utilization # Allowed types are 'Utilization' or 'AverageValue'
           value: "80"
+    advanced:
+      horizontalPodAutoscalerConfig:
+        behaviour:
+          scaleUp:
+            stabilizationWindowSeconds: 0
+            policies:
+              - type: Pods
+                value: 1
+                periodSeconds: 15
+            selectPolicy: Max
 
   keyvault:
     name: "cstar-d-rtd-kv"
