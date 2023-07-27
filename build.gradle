@@ -67,7 +67,7 @@ graalvmNative {
         main {
             useFatJar = true
             buildArgs.add("--initialize-at-run-time=io.netty")
-			buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback")
+	    buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback")
         }
     }
 }
