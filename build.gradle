@@ -1,3 +1,6 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.graalvm.buildtools.gradle.tasks.BuildNativeImageTask
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.1'
@@ -5,6 +8,7 @@ plugins {
 	id 'org.graalvm.buildtools.native' version '0.9.23'
 	id 'jacoco'
 	id "org.sonarqube" version "3.5.0.2730"
+	id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 group = 'it.pagopa.cstar'
@@ -27,6 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation "io.jsonwebtoken:jjwt-api:${jwtVersion}"
+	implementation 'com.microsoft.azure:applicationinsights-runtime-attach:3.4.15'
 
 	runtimeOnly "io.jsonwebtoken:jjwt-impl:${jwtVersion}"
 	runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
@@ -56,6 +61,27 @@ test {
 	finalizedBy jacocoTestReport
 }
 
+tasks.named("shadowJar", ShadowJar.class) {
+	zip64 = true
+	archiveBaseName.set('shadow')
+	duplicatesStrategy = DuplicatesStrategy.WARN
+	mergeServiceFiles()
+
+	manifest {
+		attributes 'Main-Class': 'it.pagopa.cstar.iomock.IoMockApplication'
+	}
+
+	from(graalvmNative.binaries.named('main').get().classpath.getElements().map {
+		it.stream().map { if (it.asFile.path.endsWith(".jar")) zipTree(it) else it }.toList()
+	})
+}
+
+tasks.named("nativeCompile", BuildNativeImageTask.class) {
+	final shadowJarTask = tasks.named("shadowJar", ShadowJar.class).get()
+	it.dependsOn(shadowJarTask)
+	it.classpathJar.set(shadowJarTask.archiveFile.get())
+}
+
 graalvmNative {
     metadataRepository {
         enabled = true
@@ -63,11 +89,11 @@ graalvmNative {
     }
 	binaries {
         useArgFile.set(false)
-		
+
         main {
             useFatJar = true
             buildArgs.add("--initialize-at-run-time=io.netty")
-	    buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback")
+	    	buildArgs.add("--initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback")
         }
     }
 }
