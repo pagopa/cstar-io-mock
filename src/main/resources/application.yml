@@ -5,6 +5,8 @@ logging:
 iobackend:
   jwtkey: ${BASE64_IO_JWT_KEY:testKey}
 
+
+management.endpoints.web.exposure.include: health,metrics
 management:
   endpoint:
     health:
