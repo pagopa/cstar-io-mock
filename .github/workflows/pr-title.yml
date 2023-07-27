@@ -52,14 +52,3 @@ jobs:
           # merge commit, and it's easy to commit this by mistake. Enable this option
           # to also validate the commit message for one commit PRs.
           validateSingleCommit: false
-      - name: Detect new semantic version
-        id: semantic
-        uses: cycjimmy/semantic-release-action@8e58d20d0f6c8773181f43eb74d6a05e3099571d #v3
-        with:
-          dry_run: true
-          ci: true
-          semantic_version: 18.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Echo new version
-        run: echo ${{ steps.semantic.outputs.new_release_version }}
