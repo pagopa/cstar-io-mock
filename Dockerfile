@@ -6,7 +6,7 @@ COPY . .
 
 RUN ./gradlew nativeCompile -Pnative
 
-FROM ubuntu:jammy-20230624@sha256:0bced47fffa3361afa981854fcabcd4577cd43cebbb808cea2b1f33a3dd7f508 AS runtime
+FROM ubuntu:mantic-20230712@sha256:23e2d6c4de2adfcbd631be39296d8eb6968e2bfbf0df86db88147f2814086bd6 AS runtime
 
 EXPOSE 8080
 
