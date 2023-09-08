@@ -2,13 +2,17 @@ logging:
   level:
     root: INFO
 
+spring.application.name: mockio # allows to get proper resource name on otel
+logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
 iobackend:
   jwtkey: ${BASE64_IO_JWT_KEY:Cup7DtbwoctKZqDJun/kkVLs4TSdHCRzVzA5L5PrXQg=}
 
-
-management.endpoints.web.exposure.include: health,metrics
-management:
-  endpoint:
-    health:
-      probes:
-        enabled: true
+applicationinsights:
+  connection:
+    string: ${APPINSIGHT_CONNECTION_STRING}

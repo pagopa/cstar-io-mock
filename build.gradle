@@ -26,12 +26,29 @@ repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		// from https://github.com/open-telemetry/opentelemetry-java-examples/blob/main/spring-native/build.gradle
+		mavenBom 'io.opentelemetry:opentelemetry-bom:1.29.0'
+		mavenBom 'io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha:1.29.0-alpha'
+		mavenBom 'io.micrometer:micrometer-tracing-bom:1.1.4'
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation "io.jsonwebtoken:jjwt-api:${jwtVersion}"
-	implementation 'com.microsoft.azure:applicationinsights-runtime-attach:3.4.15'
+
+	// micrometer tracing (new observability standard for spring boot >= 3.0)
+	implementation "io.micrometer:micrometer-tracing"
+	implementation 'io.micrometer:micrometer-tracing-bridge-otel' // connect micrometer tracing to open telemetry
+	implementation 'io.opentelemetry:opentelemetry-exporter-logging'
+
+	// https://mvnrepository.com/artifact/com.azure/azure-monitor-opentelemetry-exporter
+	implementation 'com.azure:azure-monitor-opentelemetry-exporter:1.0.0-beta.11' // allows to export to azure
+
 
 	runtimeOnly "io.jsonwebtoken:jjwt-impl:${jwtVersion}"
 	runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
