@@ -16,7 +16,7 @@ public class AppInsightConfig implements BeanPostProcessor {
 
   private final AzureMonitorExporterBuilder azureMonitorExporterBuilder;
 
-  public AppInsightConfig(@Value("${applicationinsights.connection.string}") String appInsightConnectionString) {
+  public AppInsightConfig(@Value("${applicationinsights.connectionstring}") String appInsightConnectionString) {
     this.azureMonitorExporterBuilder = new AzureMonitorExporterBuilder()
         .connectionString(appInsightConnectionString);
   }

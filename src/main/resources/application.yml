@@ -9,10 +9,13 @@ management:
   tracing:
     sampling:
       probability: 1.0
+  endpoints.web.exposure.include: health,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
 
 iobackend:
-  jwtkey: ${BASE64_IO_JWT_KEY:Cup7DtbwoctKZqDJun/kkVLs4TSdHCRzVzA5L5PrXQg=}
+  jwtkey: ${BASE64_IO_JWT_KEY:testKey}
 
-applicationinsights:
-  connection:
-    string: ${APPINSIGHT_CONNECTION_STRING}
+applicationinsights.connectionstring: ${APPINSIGHTS_CONNECTION_STRING}
