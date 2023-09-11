@@ -25,4 +25,10 @@ public interface TokenIoController {
       @RequestParam(value = "version", required = false) String version,
       @Valid @NotNull @NotBlank @RequestParam(value = "token") String token
   );
+
+  @PostMapping(value = "/login-test", produces = {"application/json"})
+  Mono<ResponseEntity<String>> createTokenTest(
+      @RequestParam(value = "version", required = false) String version,
+      @Valid @NotNull @NotBlank @RequestParam("fiscalCode") String fiscalCode
+  );
 }

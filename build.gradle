@@ -41,10 +41,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation "io.jsonwebtoken:jjwt-api:${jwtVersion}"
 
-	// micrometer tracing (new observability standard for spring boot >= 3.0)
-	implementation "io.micrometer:micrometer-tracing"
-	implementation 'io.micrometer:micrometer-tracing-bridge-otel' // connect micrometer tracing to open telemetry
-	implementation 'io.opentelemetry:opentelemetry-exporter-logging'
+	implementation "io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter"
+	implementation "io.opentelemetry.instrumentation:opentelemetry-spring-webflux-5.3"
 
 	// https://mvnrepository.com/artifact/com.azure/azure-monitor-opentelemetry-exporter
 	implementation 'com.azure:azure-monitor-opentelemetry-exporter:1.0.0-beta.11' // allows to export to azure
