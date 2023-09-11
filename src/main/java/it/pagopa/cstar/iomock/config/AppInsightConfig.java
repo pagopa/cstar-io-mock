@@ -21,15 +21,15 @@ public class AppInsightConfig implements BeanPostProcessor {
         .connectionString(appInsightConnectionString);
   }
 
-  @Bean
-  public SpanExporter loggingSpanProcessor() {
-    return LoggingSpanExporter.create();
-  }
-
-  @Bean
-  public MetricExporter loggingMetricExporter() {
-    return LoggingMetricExporter.create();
-  }
+//  @Bean
+//  public SpanExporter loggingSpanProcessor() {
+//    return LoggingSpanExporter.create();
+//  }
+//
+//  @Bean
+//  public MetricExporter loggingMetricExporter() {
+//    return LoggingMetricExporter.create();
+//  }
 
   @Bean
   public SpanExporter azureSpanProcessor() {
