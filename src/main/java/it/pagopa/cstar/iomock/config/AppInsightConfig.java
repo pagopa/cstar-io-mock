@@ -39,37 +39,4 @@ public class AppInsightConfig {
   public LogRecordExporter azureLogRecordExporter() {
     return azureMonitorExporterBuilder.buildLogRecordExporter();
   }
-
-    /*@Bean
-  public OpenTelemetrySdk getOpenTelemetry() {
-    final Resource serviceNameResource =
-        Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "mockio"));
-
-
-    final var tracerProvider = SdkTracerProvider.builder()
-        //.addSpanProcessor(SimpleSpanProcessor.create(azureMonitorExporterBuilderOpt.buildTraceExporter()))
-        .addSpanProcessor(SimpleSpanProcessor.create(LoggingSpanExporter.create()))
-        .setResource(Resource.getDefault().merge(serviceNameResource))
-        .setSampler(Sampler.alwaysOn())
-        .build();
-
-    final var loggerProvider = SdkLoggerProvider.builder()
-        //.addLogRecordProcessor(SimpleLogRecordProcessor.create(azureMonitorExporterBuilderOpt.buildLogRecordExporter()))
-        .addLogRecordProcessor(SimpleLogRecordProcessor.create(SystemOutLogRecordExporter.create()))
-        .setResource(Resource.getDefault().merge(serviceNameResource))
-        .build();
-
-    final var metricProvider = SdkMeterProvider.builder()
-        //.registerMetricReader(PeriodicMetricReader.create(azureMonitorExporterBuilderOpt.buildMetricExporter()))
-        //.registerMetricReader(PeriodicMetricReader.create(LoggingMetricExporter.create())) // export to stdout
-        .setResource(Resource.getDefault().merge(serviceNameResource))
-        .build();
-
-    return OpenTelemetrySdk.builder()
-        .setTracerProvider(tracerProvider)
-        .setLoggerProvider(loggerProvider)
-        .setMeterProvider(metricProvider)
-        .setPropagators(ContextPropagators.create(W3CTraceContextPropagator.getInstance()))
-        .buildAndRegisterGlobal();
-  }*/
 }

@@ -2,10 +2,14 @@ logging:
   level:
     root: INFO
 
-spring.application.name: mockio # allows to get proper resource name on otel
+spring.application.name: mockio-local # allows to get proper resource name on otel
 logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 management:
+  defaults:
+    metrics:
+      export:
+        enabled: true
   tracing:
     sampling:
       probability: 1.0

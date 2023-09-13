@@ -46,6 +46,9 @@ dependencies {
 	implementation 'io.micrometer:micrometer-tracing-bridge-otel' // connect micrometer tracing to open telemetry
 	implementation 'io.opentelemetry:opentelemetry-exporter-logging'
 
+	implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot'
+
+
 	// https://mvnrepository.com/artifact/com.azure/azure-monitor-opentelemetry-exporter
 	implementation 'com.azure:azure-monitor-opentelemetry-exporter:1.0.0-beta.11' // allows to export to azure
 

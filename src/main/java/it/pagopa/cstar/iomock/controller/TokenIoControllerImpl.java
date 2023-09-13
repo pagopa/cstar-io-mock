@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -17,19 +18,24 @@ import reactor.core.scheduler.Schedulers;
 public class TokenIoControllerImpl implements TokenIoController {
 
   private final TokenIoService tokenIoService;
+  private final WebClient webClient;
 
   @Autowired
-  public TokenIoControllerImpl(TokenIoService tokenIoService) {
+  public TokenIoControllerImpl(TokenIoService tokenIoService, WebClient.Builder builder) {
+    this.webClient = builder.baseUrl("http://google.it").build();
     this.tokenIoService = tokenIoService;
   }
 
   @Override
   public Mono<ResponseEntity<String>> createToken(String version, String fiscalCode) {
-    return Mono.just(fiscalCode)
+    return webClient.get()
+        .retrieve()
+        .bodyToMono(String.class)
+        .flatMap(a -> Mono.just(fiscalCode)
         .subscribeOn(Schedulers.boundedElastic())
         .map(tokenIoService::generateToken)
         .map(ResponseEntity::ok)
-        .doOnError(error -> log.error("Error during token creation", error));
+        .doOnError(error -> log.error("Error during token creation", error)));
   }
 
   @Override
