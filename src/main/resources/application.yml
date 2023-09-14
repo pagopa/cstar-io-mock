@@ -5,11 +5,9 @@ logging:
 spring.application.name: mockio # allows to get proper resource name on otel
 logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
+otel.exporter.otlp.enabled: false
+otel.traces.sampler.probability: 1.0
 management:
-  defaults:
-    metrics:
-      export:
-        enabled: false
   tracing:
     sampling:
       probability: 1.0
@@ -20,6 +18,6 @@ management:
         enabled: true
 
 iobackend:
-  jwtkey: ${BASE64_IO_JWT_KEY:testKey}
+  jwtkey: ${BASE64_IO_JWT_KEY:lOZ35qyOUbxFK4NPcyVoRqzOUt7J3nEyTfDeCMxRi2i2dulEYC1klIboJpXhXE3J}
 
 applicationinsights.connectionstring: ${APPINSIGHTS_CONNECTION_STRING}
