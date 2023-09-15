@@ -1,7 +1,6 @@
 package it.pagopa.cstar.iomock.config;
 
 import com.azure.monitor.opentelemetry.exporter.AzureMonitorExporterBuilder;
-import io.opentelemetry.exporter.logging.LoggingMetricExporter;
 import io.opentelemetry.sdk.logs.export.LogRecordExporter;
 import io.opentelemetry.sdk.metrics.export.MetricExporter;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
@@ -18,16 +17,6 @@ public class AppInsightConfig {
     this.azureMonitorExporterBuilder = new AzureMonitorExporterBuilder()
         .connectionString(appInsightConnectionString);
   }
-
-//  @Bean
-//  public SpanExporter loggingSpanProcessor() {
-//    return LoggingSpanExporter.create();
-//  }
-//
-/*  @Bean
-  public MetricExporter loggingMetricExporter() {
-    return LoggingMetricExporter.create();
-  }*/
 
   @Bean
   public SpanExporter azureSpanProcessor() {

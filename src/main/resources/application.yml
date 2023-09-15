@@ -3,8 +3,8 @@ logging:
     root: INFO
 
 spring.application.name: mockio # allows to get proper resource name on otel
-logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
+otel.instrumentation.logback-appender.enabled: true
 otel.exporter.otlp.enabled: false
 otel.traces.sampler.probability: 1.0
 management:
