@@ -28,6 +28,7 @@ public class TokenIoControllerImpl implements TokenIoController {
     return Mono.just(fiscalCode)
         .subscribeOn(Schedulers.boundedElastic())
         .map(tokenIoService::generateToken)
+        .doOnNext(c -> log.info("aaaa"))
         .map(ResponseEntity::ok)
         .doOnError(error -> log.error("Error during token creation", error));
   }
