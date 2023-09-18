@@ -4,13 +4,10 @@ logging:
 
 spring.application.name: mockio # allows to get proper resource name on otel
 
-otel.instrumentation.logback-appender.enabled: true
-otel.exporter.otlp.enabled: false
-otel.traces.sampler.probability: 1.0
+otel.instrumentation.logback-appender.enabled: true # enable logback instrumentation
+otel.exporter.otlp.enabled: false # disable send to OTLP endpoint
+otel.traces.sampler.probability: 1.0 # sample probability for tracing (spans)
 management:
-  tracing:
-    sampling:
-      probability: 1.0
   endpoints.web.exposure.include: health,metrics
   endpoint:
     health:

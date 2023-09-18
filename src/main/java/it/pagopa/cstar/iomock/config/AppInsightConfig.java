@@ -18,7 +18,9 @@ public class AppInsightConfig {
 
   private final AzureMonitorExporterBuilder azureMonitorExporterBuilder;
 
-  public AppInsightConfig(@Value("${applicationinsights.connectionstring}") String appInsightConnectionString) {
+  public AppInsightConfig(
+      @Value("${applicationinsights.connectionstring}") String appInsightConnectionString
+  ) {
     this.azureMonitorExporterBuilder = new AzureMonitorExporterBuilder()
         .connectionString(appInsightConnectionString);
   }
