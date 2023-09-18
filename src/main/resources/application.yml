@@ -5,8 +5,10 @@ logging:
 spring.application.name: mockio # allows to get proper resource name on otel
 
 otel.instrumentation.logback-appender.enabled: true # enable logback instrumentation
-otel.exporter.otlp.enabled: false # disable send to OTLP endpoint
 otel.traces.sampler.probability: 1.0 # sample probability for tracing (spans)
+otel.metric.export.interval: 60000 # sampling rate for metrics (millis)
+otel.exporter.otlp.enabled: false # disable send to OTLP endpoint
+
 management:
   endpoints.web.exposure.include: health,metrics
   endpoint:
@@ -15,6 +17,8 @@ management:
         enabled: true
 
 iobackend:
-  jwtkey: ${BASE64_IO_JWT_KEY:lOZ35qyOUbxFK4NPcyVoRqzOUt7J3nEyTfDeCMxRi2i2dulEYC1klIboJpXhXE3J}
+  jwtkey: ${BASE64_IO_JWT_KEY:Cup7DtbwoctKZqDJun/kkVLs4TSdHCRzVzA5L5PrXQg=}
 
-applicationinsights.connectionstring: ${APPINSIGHTS_CONNECTION_STRING}
+applicationinsights:
+  enabled: true
+  connectionstring: ${APPINSIGHTS_CONNECTION_STRING}
