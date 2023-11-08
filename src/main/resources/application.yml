@@ -2,13 +2,37 @@ logging:
   level:
     root: INFO
 
-iobackend:
-  jwtkey: ${BASE64_IO_JWT_KEY:testKey}
+spring.application.name: mockio # allows to get proper resource name on otel
 
+# OpenTelemetry
+applicationinsights.enabled: '@applicationinsights.enabled@'
+otel.log.level: ${OPENTELEMETRY_LOG_LEVEL:INFO}
+otel.instrumentation.logback-appender.enabled: true # enable logback instrumentation
+otel.traces.sampler.probability: 1.0 # sample probability for tracing (spans)
+otel.metric.export.interval: 60000 # sampling rate for metrics (millis)
+otel.exporter.otlp.enabled: false # disable send to OTLP endpoint
 
-management.endpoints.web.exposure.include: health,metrics
 management:
+  endpoints:
+    enabled-by-default: false
+    web.exposure.include: health
+  metrics:
+    export.defaults.enabled: false
+    enable:
+      all: false
+      process.cpu: true
+      system.cpu: true
+      jvm.memory: true
+      application: true
   endpoint:
     health:
+      enabled: true
       probes:
         enabled: true
+
+iobackend:
+  jwtkey: ${BASE64_IO_JWT_KEY:Cup7DtbwoctKZqDJun/kkVLs4TSdHCRzVzA5L5PrXQg=}
+
+applicationinsights:
+  enabled: true
+  connectionstring: ${APPINSIGHTS_CONNECTION_STRING}
