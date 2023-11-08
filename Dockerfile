@@ -7,7 +7,7 @@ COPY . .
 RUN ./gradlew nativeCompile -Pnative
 
 FROM ubuntu:mantic-20230712@sha256:23e2d6c4de2adfcbd631be39296d8eb6968e2bfbf0df86db88147f2814086bd6 AS cve
-COPY --from=builder /build/libs/nativecompile-*.jar .
+COPY --from=builder /app/build/libs/nativecompile-*.jar .
 
 FROM ubuntu:mantic-20230712@sha256:23e2d6c4de2adfcbd631be39296d8eb6968e2bfbf0df86db88147f2814086bd6 AS runtime
 
