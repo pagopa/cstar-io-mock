@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.server.WebFilter;
 
 @Configuration
-@ConditionalOnProperty(value = "applicationinsights.enabled", matchIfMissing = false)
+@ConditionalOnProperty(value = "applicationinsights.enabled", havingValue = "true", matchIfMissing = false)
 public class AppInsightConfig {
 
   private final AzureMonitorExporterBuilder azureMonitorExporterBuilder;
