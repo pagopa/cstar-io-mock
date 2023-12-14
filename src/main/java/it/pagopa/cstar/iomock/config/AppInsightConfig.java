@@ -5,6 +5,7 @@ import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.monitor.opentelemetry.exporter.AzureMonitorExporterBuilder;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.instrumentation.spring.webflux.v5_3.SpringWebfluxTelemetry;
+import io.opentelemetry.sdk.logs.export.LogRecordExporter;
 import io.opentelemetry.sdk.metrics.export.MetricExporter;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,11 +23,7 @@ public class AppInsightConfig {
   public AppInsightConfig(
       @Value("${applicationinsights.connectionstring}") String appInsightConnectionString
   ) {
-    final var logOptions = new HttpLogOptions()
-        .setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS)
-        .setPrettyPrintBody(true);
     this.azureMonitorExporterBuilder = new AzureMonitorExporterBuilder()
-        .httpLogOptions(logOptions)
         .connectionString(appInsightConnectionString);
   }
 
@@ -40,10 +37,10 @@ public class AppInsightConfig {
     return azureMonitorExporterBuilder.buildMetricExporter();
   }
 
-  /*@Bean
+  @Bean
   public LogRecordExporter azureLogRecordExporter() {
     return azureMonitorExporterBuilder.buildLogRecordExporter();
-  }*/
+  }
 
   @Bean
   public SpringWebfluxTelemetry springWebfluxTelemetry(OpenTelemetry openTelemetry) {
