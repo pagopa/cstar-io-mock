@@ -51,7 +51,7 @@ microservice-chart:
 
   envConfig:
     APPLICATIONINSIGHTS_PREVIEW_PROFILER_ENABLED: "false"
-    OPENTELEMETRY_LOG_LEVEL: "ERROR"
+    OPENTELEMETRY_LOG_LEVEL: "WARN"
 
   envSecret:
     BASE64_IO_JWT_KEY: io-mock-jwt-key
