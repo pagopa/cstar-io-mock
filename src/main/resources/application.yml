@@ -1,7 +1,6 @@
 logging:
   level:
     root: INFO
-    com.azure.core.http.policy.RetryPolicy: DEBUG
 
 spring.application.name: mockio # allows to get proper resource name on otel
 
