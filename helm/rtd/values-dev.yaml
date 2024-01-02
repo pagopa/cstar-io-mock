@@ -18,6 +18,11 @@ microservice-chart:
   envSecret:
     aks-api-url: cstar-d-weu-dev01-aks-apiserver-url
 
+  envConfig:
+    AZURE_REQUEST_RESPONSE_TIMEOUT: "30000"
+    AZURE_REQUEST_WRITE_TIMEOUT: "30000"
+    AZURE_REQUEST_READ_TIMEOUT: "30000"
+
   autoscaling:
     enable: true
     minReplica: 1
