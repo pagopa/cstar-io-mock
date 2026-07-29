@@ -59,4 +59,4 @@ jobs:
         # https://github.com/pagopa/github-actions-template/releases/tag/v2.4.1
         uses: pagopa/github-actions-template/payments-flow-docker-snapshot@713f5abd8f8ee210e5f6a4243ae52eb7c1b3b5ab
         with:
-          current_branch: ${{ github.ref_name }
+          current_branch: ${{ github.ref_name }}
