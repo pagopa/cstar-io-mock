@@ -1,33 +1,37 @@
 name: Release
 
 on:
-  # Trigger the workflow on push or pull request,
-  # but only for the main branch
+  # Trigger the workflow on push on the main branch
   push:
     branches:
       - main
     paths-ignore:
-      - "CODEOWNERS"
-      - "**.md"
-      - ".**"
+      - 'CODEOWNERS'
+      - '**.md'
+      - '.**'
+
+permissions:
+  packages: write
+  contents: write
+
 
 jobs:
-  release:
-    name: Release
-    runs-on: ubuntu-latest
+  checkout:
+    name: 🔖 Checkout Repository
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab #v3
+      - name: Checkout code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          persist-credentials: false
-          fetch-depth: 0
+          ref: ${{ github.ref_name }}
 
-      - name: Release
-        uses: cycjimmy/semantic-release-action@8e58d20d0f6c8773181f43eb74d6a05e3099571d #v3
+  flow-release:
+    name: 🚀 Release
+    runs-on: ubuntu-22.04
+    needs: checkout
+    steps:
+      - name: 🚀 release + docker
+        # https://github.com/pagopa/github-actions-template/releases/tag/v2.4.1
+        uses: pagopa/github-actions-template/payments-flow-release@713f5abd8f8ee210e5f6a4243ae52eb7c1b3b5ab
         with:
-          semantic_version: 18.0.0
-          extra_plugins: |
-            semantic-release/release-notes-generator#5f9d65debbb60057c0d35d3a198e41f5bf09cf0f
-            semantic-release/git#3e934d45f97fd07a63617c0fc098c9ed3e67d97a
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          current_branch: ${{ github.ref_name }}
