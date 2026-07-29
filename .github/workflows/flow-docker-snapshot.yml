@@ -56,34 +56,7 @@ jobs:
           ref: ${{ env.CURRENT_BRANCH }}
 
       - name: Run Snapshot Docker Build/Push
-        # https://github.com/pagopa/github-actions-template/releases/tag/v2.0.0
-        uses: pagopa/github-actions-template/payments-flow-docker-snapshot@b825ee193430395706a4a7e580b8435bdded0227
+        # https://github.com/pagopa/github-actions-template/releases/tag/v2.4.1
+        uses: pagopa/github-actions-template/payments-flow-docker-snapshot@713f5abd8f8ee210e5f6a4243ae52eb7c1b3b5ab
         with:
-          current_branch: ${{ github.ref_name }}
-
-  azure-devops-trigger:
-    name: 🅰️ Azure DevOps Pipeline Trigger
-    needs: docker-build
-    runs-on: ubuntu-22.04
-    if: |
-      always() &&
-      needs.docker-build.result != 'failure' &&
-      github.event.inputs.azdo_trigger_enabled == 'true'
-    steps:
-      - name: Trigger Azure DevOps Pipeline
-        # https://github.com/pagopa/github-actions-template/releases/tag/v2.1.0
-        uses: pagopa/github-actions-template/azure-devops-trigger-pipeline@cad30356d9046af6e7b0cee43db4cf919cc408f9
-        with:
-          enable_azure_devops_step: 'true'
-          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/cstar-shared-itn-projects'
-          azure_devops_pipeline_name: 'cstar-shared-deploy-aks.deploy'
-          azure_devops_pat: ${{ secrets.AZURE_DEVOPS_TOKEN }}
-          azure_template_parameters: |
-            {
-              "APPS_TOP": "[]",
-              "APPS_MID": "["io-mock"]",
-              "APPS_EXT": "[]",
-              "ARGOCD_TARGET_BRANCH": "${{ github.event.inputs.argocd_target_branch }}",
-              "POSTMAN_BRANCH": "${{ github.event.inputs.postman_branch }}",
-              "TRIGGER_MESSAGE": "idpay-transactions"
-            }
+          current_branch: ${{ github.ref_name }
